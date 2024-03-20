@@ -1,5 +1,3 @@
-import { photos } from './data.js';
-import { renderThumbnails } from './render-thumbnails.js';
-import './open-big-picture.js';
-
-renderThumbnails(photos);
+import './creat_template.js';
+import './data.js';
+import './big-picture.js';

@@ -1,19 +1,9 @@
-const getRandomInteger = (min, max) => {
-  min = Math.ceil(Math.min(min, max));
-  max = Math.floor(Math.max(min, max));
+// Функция для генерации случайного числа в диапазоне от min до max
+function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
 
-const createObjectsArray = (addObject, arraySize) => {
-  const objectsArray = [];
-  for (let i = 0; i < arraySize; i++) {
-    objectsArray.push(addObject());
-  }
-  return objectsArray;
-};
+// Функция отслеживания нажатия кнопки Esc
+const isEscKeyDown = (evt) => evt.key === 'Escape';
 
-const isEnterKey = (evt) => evt.key === 'Enter';
-
-const isEscapeKey = (evt) => evt.key === 'Escape';
-
-export { getRandomInteger, createObjectsArray, isEscapeKey, isEnterKey };
+export { getRandomNumber, isEscKeyDown };
