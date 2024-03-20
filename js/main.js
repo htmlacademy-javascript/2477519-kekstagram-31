@@ -1,3 +1,5 @@
-import './creat_template.js';
-import './data.js';
-import './big-picture.js';
+import { photos } from './data.js';
+import { createTemplate } from './template.js';
+
+
+createTemplate(photos);
