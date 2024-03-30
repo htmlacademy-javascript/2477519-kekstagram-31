@@ -1,5 +1,5 @@
 import { photos } from './data.js';
-import { createTemplate } from './template.js';
+import { createTemplateAll } from './template.js';
+import './bigPicrure.js';
 
-
-createTemplate(photos);
+createTemplateAll(photos);
