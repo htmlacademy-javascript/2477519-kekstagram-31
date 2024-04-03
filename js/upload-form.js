@@ -13,19 +13,17 @@ const pristine = new Pristine(imgUploadForm, {
 });
 
 
-const isHashtagsValid = (hashTags) => {
-  return hashTags.match(/^(#[\w\d]{1,20}\s*){0,5}$/i)
-};
+const isHashtagsValid = (hashTags) => hashTags.match(/^(#[\w\d]{1,20}\s*){0,5}$/i);
 
 const isHashtagsUnique = (hashTags) => {
-  const tags = hashTags.toLowerCase().split(' ').filter(tag => tag.trim() !== '')
-  let uniq = new Set(tags)
-  return tags.length == uniq.size
+  const tags = hashTags.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
+  const uniq = new Set(tags);
+  return tags.length === uniq.size;
 };
 
 pristine.addValidator(inputHashtag,
   isHashtagsValid,
-  'Хештеги должны начинаться с символа \"#\", содержать буквы и цифры, быть не длинее 20 символов и их не должно быть больше пяти',
+  'Хештеги должны начинаться с символа "#", содержать буквы и цифры, быть не длинее 20 символов и их не должно быть больше пяти',
   2,
   false
 );
@@ -37,9 +35,7 @@ pristine.addValidator(inputHashtag,
   false
 );
 
-const isDesriptionTooLong = (description) => {
-  return description.length <= 140
-};
+const isDesriptionTooLong = (description) => description.length <= 140;
 
 pristine.addValidator(imgDescription,
   isDesriptionTooLong,
