@@ -107,7 +107,6 @@ const onHashtagInput = () => {
 
 const onSubmitForm = (evt) => {
   evt.preventDefault();
-
   pristine.validate();
 };
 
