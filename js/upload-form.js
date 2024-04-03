@@ -1,3 +1,5 @@
+import { onEffectChange } from './picture-effects.js';
+
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUpload = document.querySelector('.img-upload');
 const inputHashtag = imgUpload.querySelector('.text__hashtags');
@@ -5,6 +7,16 @@ const imgDescription = imgUpload.querySelector('.text__description');
 const uploadFile = imgUpload.querySelector('#upload-file');
 const uploadOverlay = imgUpload.querySelector('.img-upload__overlay');
 const imgUploadCancel = imgUpload.querySelector('.img-upload__cancel');
+
+const smaller = imgUploadForm.querySelector('.scale__control--smaller');
+const bigger = imgUploadForm.querySelector('.scale__control--bigger');
+const img = imgUploadForm.querySelector('.img-upload__preview');
+const scaleControl = imgUploadForm.querySelector('.scale__control--value');
+const effectLevel = imgUploadForm.querySelector('.img-upload__effect-level');
+const effectsList = imgUploadForm.querySelector('.effects__list');
+
+let scale = 1;
+
 
 const pristine = new Pristine(imgUploadForm, {
   classTo: 'img-upload__form',
@@ -47,6 +59,10 @@ pristine.addValidator(imgDescription,
 const onImgUploadClose = () => {
   document.body.classList.remove('modal-open');
   uploadOverlay.classList.add('hidden');
+  scale = 1;
+  img.style.transform = `scale(${scale})`;
+  effectLevel.classList.add('hidden');
+  img.style.filter = 'none';
   imgUploadForm.reset();
   document.removeEventListener('keydown', onEscapeKeydown);
 };
@@ -69,11 +85,38 @@ inputHashtag.addEventListener('keydown', (evt) => evt.stopPropagation());
 
 imgDescription.addEventListener('keydown', (evt) => evt.stopPropagation());
 
+const SCALE_STEP = 0.25;
+
+const onSmallerClick = () => {
+  if (scale > SCALE_STEP) {
+    img.style.transform = `scale(${scale -= SCALE_STEP})`;
+    scaleControl.value = `${scale * 100}%`;
+  }
+};
+
+const onBiggerClick = () => {
+  if (scale < 1) {
+    img.style.transform = `scale(${scale += SCALE_STEP})`;
+    scaleControl.value = `${scale * 100}%`;
+  }
+};
+
+const onHashtagInput = () => {
+  isHashtagsValid(inputHashtag.value);
+};
+
 const onSubmitForm = (evt) => {
   evt.preventDefault();
-
   pristine.validate();
 };
+
+smaller.addEventListener('click', onSmallerClick);
+
+bigger.addEventListener('click', onBiggerClick);
+
+effectsList.addEventListener('change', onEffectChange);
+
+inputHashtag.addEventListener('input', onHashtagInput);
 
 uploadFile.addEventListener('change', onSelectPhoto);
 
