@@ -10,12 +10,7 @@ const getCache = () => serverCache;
 
 const getData = () =>
   fetch(`${API_URL}/data`, { method: 'GET' })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Не получилось получить данные!');
-      }
-      return response.json();
-    })
+    .then((response) => response.json())
     .catch((error) => {
       throw new Error(error);
     });
