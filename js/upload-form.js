@@ -129,9 +129,8 @@ const onSubmitForm = (onSuccess) => {
           if (submitButton.textContent === 'Отправить') {
             showModal(successPopup, 'success');
           }
-        });
-    } else {
-      showModal(errorPopup, 'error');
+        })
+        .catch(() => showModal(errorPopup, 'error'));
     }
   });
 };
