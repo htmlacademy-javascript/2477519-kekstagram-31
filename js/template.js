@@ -20,4 +20,4 @@ const createTemplateAll = (objects) => {
   pictures.append(container);
 };
 
-export { createTemplateAll };
+export { createTemplateAll, createTemplate };

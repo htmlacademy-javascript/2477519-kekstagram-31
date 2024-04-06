@@ -1,4 +1,6 @@
 import { onEffectChange } from './picture-effects.js';
+import { sendData } from './backend.js';
+import { showModal } from './modal.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUpload = document.querySelector('.img-upload');
@@ -14,6 +16,9 @@ const img = imgUploadForm.querySelector('.img-upload__preview');
 const scaleControl = imgUploadForm.querySelector('.scale__control--value');
 const effectLevel = imgUploadForm.querySelector('.img-upload__effect-level');
 const effectsList = imgUploadForm.querySelector('.effects__list');
+const submitButton = imgUploadForm.querySelector('.img-upload__submit');
+const errorPopup = document.querySelector('#error').content.querySelector('.error');
+const successPopup = document.querySelector('#success').content.querySelector('.success');
 
 let scale = 1;
 
@@ -105,12 +110,35 @@ const onHashtagInput = () => {
   isHashtagsValid(inputHashtag.value);
 };
 
-const onSubmitForm = (evt) => {
-  evt.preventDefault();
-  pristine.validate();
+const onSubmitForm = (onSuccess) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (pristine.validate()) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'Отправляю...';
+      inputHashtag.value = inputHashtag.value.trim().replaceAll(/\s+/g, ' ');
+      const formData = new FormData(evt.target);
+      sendData(formData)
+        .then(onSuccess)
+        .then(() => {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Отправить';
+        })
+        .then(() => {
+          if (submitButton.textContent === 'Отправить') {
+            showModal(successPopup, 'success');
+          }
+        });
+    } else {
+      showModal(errorPopup, 'error');
+    }
+  });
 };
 
 smaller.addEventListener('click', onSmallerClick);
+
+imgUploadCancel.addEventListener('click', onImgUploadClose);
 
 bigger.addEventListener('click', onBiggerClick);
 
@@ -121,3 +149,5 @@ inputHashtag.addEventListener('input', onHashtagInput);
 uploadFile.addEventListener('change', onSelectPhoto);
 
 imgUploadForm.addEventListener('submit', onSubmitForm);
+
+export { onSubmitForm, onImgUploadClose };

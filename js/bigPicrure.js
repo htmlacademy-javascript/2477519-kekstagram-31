@@ -1,4 +1,4 @@
-import { photos } from './data.js';
+import { getCache } from './backend.js';
 
 const bigPictureModule = document.querySelector('.big-picture');
 const pictureImg = bigPictureModule.querySelector('.big-picture__img img');
@@ -68,7 +68,7 @@ const openBigPictureModule = (evt) => {
   if (evt.target.closest('.picture')) {
     evt.preventDefault();
 
-    const photo = photos[evt.target.closest('.picture').dataset.id];
+    const photo = getCache()[evt.target.closest('.picture').dataset.id];
     comments = photo.comments;
     body.classList.add('modal-open');
     bigPictureModule.classList.remove('hidden');
