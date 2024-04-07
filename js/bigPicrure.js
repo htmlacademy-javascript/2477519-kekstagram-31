@@ -37,6 +37,10 @@ function onEscKeyDown(evt) {
 function onLoadNewComment() {
   const newComments = comments.slice(constsComment, constsComment + 5);
   createComments(newComments);
+  if (constsComment >= comments.length) {
+    const commentsLoader = bigPictureModule.querySelector('.comments-loader');
+    commentsLoader.style.display = 'none';
+  }
 }
 
 function createComments(cmts) {
