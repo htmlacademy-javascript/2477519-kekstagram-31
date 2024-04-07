@@ -12,7 +12,7 @@ const imgUploadCancel = imgUpload.querySelector('.img-upload__cancel');
 
 const smaller = imgUploadForm.querySelector('.scale__control--smaller');
 const bigger = imgUploadForm.querySelector('.scale__control--bigger');
-const img = imgUploadForm.querySelector('.img-upload__preview');
+const img = imgUploadForm.querySelector('.img-upload__preview img');
 const scaleControl = imgUploadForm.querySelector('.scale__control--value');
 const effectLevel = imgUploadForm.querySelector('.img-upload__effect-level');
 const effectsList = imgUploadForm.querySelector('.effects__list');
@@ -29,13 +29,17 @@ const pristine = new Pristine(imgUploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error',
 });
 
-
-const isHashtagsValid = (hashTags) => hashTags.match(/^(#[\w\d]{1,20}\s*){0,5}$/i);
+const isHashtagsValid = (hashTags) => {
+  if (!hashTags.match(/^(#[\w\d]{1,19}\s*){0,5}$/i)) {
+    return false;
+  }
+  return true;
+};
 
 const isHashtagsUnique = (hashTags) => {
   const tags = hashTags.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
   const uniq = new Set(tags);
-  return tags.length === uniq.size;
+  return tags.length === uniq.size && uniq.size <= 5;
 };
 
 pristine.addValidator(inputHashtag,
