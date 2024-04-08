@@ -1,7 +1,6 @@
 import { getCache } from './backend.js';
 
-const MINIMUM_OF_COMMENTS = 0;
-const MAXIMUM_OF_COMMENTS = 5;
+const STEP_OF_COMMENTS = 5;
 
 const Avatar = {
   HEIGHT: 35,
@@ -11,8 +10,8 @@ const Avatar = {
 const bigPictureModule = document.querySelector('.big-picture');
 const pictureImg = bigPictureModule.querySelector('.big-picture__img img');
 const likesCount = bigPictureModule.querySelector('.likes-count');
-const commentShownCnt = bigPictureModule.querySelector('.social__comment-shown-count');
-const commentTotalCnt = bigPictureModule.querySelector('.social__comment-total-count');
+const commentShownCount = bigPictureModule.querySelector('.social__comment-shown-count');
+const commentTotalCount = bigPictureModule.querySelector('.social__comment-total-count');
 const commentsList = bigPictureModule.querySelector('.social__comments');
 const socialCaption = bigPictureModule.querySelector('.social__caption');
 const body = document.querySelector('body');
@@ -39,11 +38,11 @@ function onEscKeyDown(evt) {
 }
 
 function onLoadNewComment() {
-  const newComments = comments.slice(commentCount, commentCount + MAXIMUM_OF_COMMENTS);
+  const newComments = comments.slice(commentCount, commentCount + STEP_OF_COMMENTS);
 
   createComments(newComments);
 
-  if (Number(commentShownCnt.textContent) === comments.length) {
+  if (Number(commentShownCount.textContent) === comments.length) {
     commentsLoader.classList.add('hidden');
   }
 }
@@ -70,7 +69,7 @@ function createComments(note) {
     commentsList.appendChild(commentItem);
   });
   commentCount += note.length;
-  commentShownCnt.textContent = commentCount;
+  commentShownCount.textContent = commentCount;
 }
 
 const openBigPictureModule = (evt) => {
@@ -84,14 +83,14 @@ const openBigPictureModule = (evt) => {
     pictureImg.src = photo.url;
     pictureImg.alt = photo.description;
     likesCount.textContent = photo.likes;
-    commentShownCnt.textContent = photo.comments.length;
-    commentTotalCnt.textContent = photo.comments.length;
+    commentShownCount.textContent = photo.comments.length;
+    commentTotalCount.textContent = photo.comments.length;
     socialCaption.textContent = photo.description;
 
     commentsList.innerHTML = '';
 
-    createComments(comments.slice(MINIMUM_OF_COMMENTS, MAXIMUM_OF_COMMENTS));
-    if (Number(commentShownCnt.textContent) === comments.length) {
+    createComments(comments.slice(0, STEP_OF_COMMENTS));
+    if (Number(commentShownCount.textContent) === comments.length) {
       commentsLoader.classList.add('hidden');
     } else {
       commentsLoader.classList.remove('hidden');
