@@ -1,5 +1,8 @@
 import { getCache } from './backend.js';
 
+const MINIMUM_OF_COMMENTS = 0;
+const MAXIMUM_OF_COMMENTS = 5;
+
 const Avatar = {
   HEIGHT: 35,
   WIDTH: 35,
@@ -7,7 +10,7 @@ const Avatar = {
 
 const bigPictureModule = document.querySelector('.big-picture');
 const pictureImg = bigPictureModule.querySelector('.big-picture__img img');
-const likesCnt = bigPictureModule.querySelector('.likes-count');
+const likesCount = bigPictureModule.querySelector('.likes-count');
 const commentShownCnt = bigPictureModule.querySelector('.social__comment-shown-count');
 const commentTotalCnt = bigPictureModule.querySelector('.social__comment-total-count');
 const commentsList = bigPictureModule.querySelector('.social__comments');
@@ -16,7 +19,7 @@ const body = document.querySelector('body');
 const pictures = document.querySelector('.pictures');
 const commentsLoader = bigPictureModule.querySelector('.comments-loader');
 
-let constsComment = 0;
+let commentCount = 0;
 let comments = null;
 
 const closeBigPictureModule = () => {
@@ -26,7 +29,7 @@ const closeBigPictureModule = () => {
 
   commentsLoader.removeEventListener('click', onLoadNewComment);
 
-  constsComment = 0;
+  commentCount = 0;
 };
 
 function onEscKeyDown(evt) {
@@ -36,7 +39,7 @@ function onEscKeyDown(evt) {
 }
 
 function onLoadNewComment() {
-  const newComments = comments.slice(constsComment, constsComment + 5);
+  const newComments = comments.slice(commentCount, commentCount + MAXIMUM_OF_COMMENTS);
 
   createComments(newComments);
 
@@ -45,8 +48,8 @@ function onLoadNewComment() {
   }
 }
 
-function createComments(cmts) {
-  cmts.forEach((comment) => {
+function createComments(note) {
+  note.forEach((comment) => {
     const commentItem = document.createElement('li');
     commentItem.classList.add('social__comment');
 
@@ -66,8 +69,8 @@ function createComments(cmts) {
 
     commentsList.appendChild(commentItem);
   });
-  constsComment += cmts.length;
-  commentShownCnt.textContent = constsComment;
+  commentCount += note.length;
+  commentShownCnt.textContent = commentCount;
 }
 
 const openBigPictureModule = (evt) => {
@@ -80,14 +83,14 @@ const openBigPictureModule = (evt) => {
     bigPictureModule.classList.remove('hidden');
     pictureImg.src = photo.url;
     pictureImg.alt = photo.description;
-    likesCnt.textContent = photo.likes;
+    likesCount.textContent = photo.likes;
     commentShownCnt.textContent = photo.comments.length;
     commentTotalCnt.textContent = photo.comments.length;
     socialCaption.textContent = photo.description;
 
     commentsList.innerHTML = '';
 
-    createComments(comments.slice(0, 5)); // 5 магическое значение, вынести в константу
+    createComments(comments.slice(MINIMUM_OF_COMMENTS, MAXIMUM_OF_COMMENTS));
     if (Number(commentShownCnt.textContent) === comments.length) {
       commentsLoader.classList.add('hidden');
     } else {

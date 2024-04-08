@@ -2,6 +2,9 @@ import { onEffectChange } from './picture-effects.js';
 import { sendData } from './backend.js';
 import { showModal } from './modal.js';
 
+const MAX_SIZE = 5;
+const MAX_LENGTH = 140;
+
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUpload = document.querySelector('.img-upload');
 const inputHashtag = imgUpload.querySelector('.text__hashtags');
@@ -44,10 +47,10 @@ const setupValidators = () => {
   const isHashtagsUnique = (hashTags) => {
     const tags = hashTags.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
     const uniq = new Set(tags);
-    return tags.length === uniq.size && uniq.size <= 5;
+    return tags.length === uniq.size && uniq.size <= MAX_SIZE;
   };
 
-  const isDesriptionTooLong = (description) => description.length <= 140;
+  const isDesriptionTooLong = (description) => description.length <= MAX_LENGTH;
 
   pristine.addValidator(inputHashtag,
     isHashtagsValid,
