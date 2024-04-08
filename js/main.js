@@ -3,7 +3,7 @@ import { createTemplateAll } from './template.js';
 import { onSubmitForm, onImgUploadClose } from './upload-form.js';
 import { changeFilter } from './filters.js';
 import './upload-form.js';
-import './bigPicrure.js';
+import './big-picture.js';
 import './save-file.js';
 
 const SHOW_MESSAGE_TIME = 5000;
