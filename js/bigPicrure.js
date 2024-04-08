@@ -1,5 +1,10 @@
 import { getCache } from './backend.js';
 
+const Avatar = {
+  HEIGHT: 35,
+  WIDTH: 35,
+};
+
 const bigPictureModule = document.querySelector('.big-picture');
 const pictureImg = bigPictureModule.querySelector('.big-picture__img img');
 const likesCnt = bigPictureModule.querySelector('.likes-count');
@@ -9,10 +14,7 @@ const commentsList = bigPictureModule.querySelector('.social__comments');
 const socialCaption = bigPictureModule.querySelector('.social__caption');
 const body = document.querySelector('body');
 const pictures = document.querySelector('.pictures');
-const Avatar = {
-  HEIGHT: 35,
-  WIDTH: 35,
-};
+const commentsLoader = bigPictureModule.querySelector('.comments-loader');
 
 let constsComment = 0;
 let comments = null;
@@ -22,7 +24,6 @@ const closeBigPictureModule = () => {
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onEscKeyDown);
 
-  const commentsLoader = bigPictureModule.querySelector('.comments-loader');
   commentsLoader.removeEventListener('click', onLoadNewComment);
 
   constsComment = 0;
@@ -36,10 +37,11 @@ function onEscKeyDown(evt) {
 
 function onLoadNewComment() {
   const newComments = comments.slice(constsComment, constsComment + 5);
+
   createComments(newComments);
-  if (constsComment >= comments.length) {
-    const commentsLoader = bigPictureModule.querySelector('.comments-loader');
-    commentsLoader.style.display = 'none';
+
+  if (Number(commentShownCnt.textContent) === comments.length) {
+    commentsLoader.classList.add('hidden');
   }
 }
 
@@ -85,9 +87,13 @@ const openBigPictureModule = (evt) => {
 
     commentsList.innerHTML = '';
 
-    createComments(comments.slice(0, 5));
+    createComments(comments.slice(0, 5)); // 5 магическое значение, вынести в константу
+    if (Number(commentShownCnt.textContent) === comments.length) {
+      commentsLoader.classList.add('hidden');
+    } else {
+      commentsLoader.classList.remove('hidden');
+    }
 
-    const commentsLoader = bigPictureModule.querySelector('.comments-loader');
     commentsLoader.addEventListener('click', onLoadNewComment);
 
     document.addEventListener('keydown', onEscKeyDown);

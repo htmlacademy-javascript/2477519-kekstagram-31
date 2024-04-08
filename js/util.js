@@ -20,6 +20,19 @@ function debounce (callback, timeoutDelay = 500) {
   };
 }
 
+function shuffle(array) {
+  const copy = array.slice();
+  let currentIndex = copy.length;
+
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [copy[currentIndex], copy[randomIndex]] = [copy[randomIndex], copy[currentIndex]];
+  }
+  return copy;
+}
+
 function throttle (callback, delayBetweenFrames) {
   // Используем замыкания, чтобы время "последнего кадра" навсегда приклеилось
   // к возвращаемой функции с условием, тогда мы его сможем перезаписывать
@@ -42,4 +55,4 @@ function throttle (callback, delayBetweenFrames) {
 }
 
 
-export {isEscapeKey, isEnterKey, throttle, debounce };
+export {isEscapeKey, isEnterKey, throttle, debounce, shuffle };

@@ -22,52 +22,91 @@ const successPopup = document.querySelector('#success').content.querySelector('.
 
 let scale = 1;
 
+let pristine = null;
 
-const pristine = new Pristine(imgUploadForm, {
-  classTo: 'img-upload__form',
-  errorTextParent: 'img-upload__text',
-  errorTextClass: 'img-upload__field-wrapper--error',
-});
+const setupValidators = () => {
+  pristine = new Pristine(imgUploadForm, {
+    classTo: 'img-upload__field-wrapper',
+    errorTextParent: 'img-upload__field-wrapper',
+    errorTextClass: 'img-upload__field-wrapper--error',
+  });
 
-const isHashtagsValid = (hashTags) => {
-  if (!hashTags.match(/^(#[\w\d]{1,19}\s*){0,5}$/i)) {
-    return false;
-  }
-  return true;
+  const isHashtagsValid = (hashTags) => {
+    if (!hashTags.trim()) {
+      return true;
+    }
+    if (!hashTags.match(/^(#[а-я\w\d]{1,19}\s*){0,5}$/i)) {
+      return false;
+    }
+    return true;
+  };
+
+  const isHashtagsUnique = (hashTags) => {
+    const tags = hashTags.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
+    const uniq = new Set(tags);
+    return tags.length === uniq.size && uniq.size <= 5;
+  };
+
+  const isDesriptionTooLong = (description) => description.length <= 140;
+
+  pristine.addValidator(inputHashtag,
+    isHashtagsValid,
+    'Хештеги должны начинаться с символа "#", содержать буквы и цифры, быть не длинее 20 символов и их не должно быть больше пяти',
+    2,
+    false
+  );
+
+  pristine.addValidator(inputHashtag,
+    isHashtagsUnique,
+    'Хештеги не могут повторяться',
+    2,
+    false
+  );
+
+  pristine.addValidator(imgDescription,
+    isDesriptionTooLong,
+    'Комментарий слишком большой',
+    2,
+    false
+  );
 };
 
-const isHashtagsUnique = (hashTags) => {
-  const tags = hashTags.toLowerCase().split(' ').filter((tag) => tag.trim() !== '');
-  const uniq = new Set(tags);
-  return tags.length === uniq.size && uniq.size <= 5;
+const setupScale = () => {
+  const SCALE_STEP = 0.25;
+
+  const onSmallerClick = () => {
+    if (scale > SCALE_STEP) {
+      img.style.transform = `scale(${scale -= SCALE_STEP})`;
+      scaleControl.value = `${scale * 100}%`;
+    }
+  };
+
+  const onBiggerClick = () => {
+    if (scale < 1) {
+      img.style.transform = `scale(${scale += SCALE_STEP})`;
+      scaleControl.value = `${scale * 100}%`;
+    }
+  };
+
+  bigger.addEventListener('click', onBiggerClick);
+
+  smaller.addEventListener('click', onSmallerClick);
 };
 
-pristine.addValidator(inputHashtag,
-  isHashtagsValid,
-  'Хештеги должны начинаться с символа "#", содержать буквы и цифры, быть не длинее 20 символов и их не должно быть больше пяти',
-  2,
-  false
-);
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
+};
 
-pristine.addValidator(inputHashtag,
-  isHashtagsUnique,
-  'Хештеги не могут повторяться',
-  2,
-  false
-);
-
-const isDesriptionTooLong = (description) => description.length <= 140;
-
-pristine.addValidator(imgDescription,
-  isDesriptionTooLong,
-  'Комментарий слишком большой',
-  2,
-  false
-);
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Отправить';
+};
 
 const onImgUploadClose = () => {
   document.body.classList.remove('modal-open');
   uploadOverlay.classList.add('hidden');
+  pristine.reset();
   scale = 1;
   img.style.transform = `scale(${scale})`;
   effectLevel.classList.add('hidden');
@@ -85,6 +124,7 @@ function onEscapeKeydown(evt) {
 
 const onSelectPhoto = () => {
   document.body.classList.add('modal-open');
+  setupValidators();
   uploadOverlay.classList.remove('hidden');
   imgUploadCancel.addEventListener('click', onImgUploadClose);
   document.addEventListener('keydown', onEscapeKeydown);
@@ -94,63 +134,31 @@ inputHashtag.addEventListener('keydown', (evt) => evt.stopPropagation());
 
 imgDescription.addEventListener('keydown', (evt) => evt.stopPropagation());
 
-const SCALE_STEP = 0.25;
-
-const onSmallerClick = () => {
-  if (scale > SCALE_STEP) {
-    img.style.transform = `scale(${scale -= SCALE_STEP})`;
-    scaleControl.value = `${scale * 100}%`;
-  }
-};
-
-const onBiggerClick = () => {
-  if (scale < 1) {
-    img.style.transform = `scale(${scale += SCALE_STEP})`;
-    scaleControl.value = `${scale * 100}%`;
-  }
-};
-
-const onHashtagInput = () => {
-  isHashtagsValid(inputHashtag.value);
-};
-
 const onSubmitForm = (onSuccess) => {
   imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
-
     if (pristine.validate()) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Отправляю...';
-      inputHashtag.value = inputHashtag.value.trim().replaceAll(/\s+/g, ' ');
+      blockSubmitButton();
       const formData = new FormData(evt.target);
       sendData(formData)
         .then(onSuccess)
         .then(() => {
-          submitButton.disabled = false;
-          submitButton.textContent = 'Отправить';
+          showModal(successPopup, 'success');
         })
-        .then(() => {
-          if (submitButton.textContent === 'Отправить') {
-            showModal(successPopup, 'success');
-          }
-        })
-        .catch(() => showModal(errorPopup, 'error'));
+        .catch(() => showModal(errorPopup, 'error'))
+        .finally(() => {
+          unblockSubmitButton();
+        });
     }
   });
 };
 
-smaller.addEventListener('click', onSmallerClick);
+setupScale();
 
 imgUploadCancel.addEventListener('click', onImgUploadClose);
 
-bigger.addEventListener('click', onBiggerClick);
-
 effectsList.addEventListener('change', onEffectChange);
 
-inputHashtag.addEventListener('input', onHashtagInput);
-
 uploadFile.addEventListener('change', onSelectPhoto);
-
-imgUploadForm.addEventListener('submit', onSubmitForm);
 
 export { onSubmitForm, onImgUploadClose };

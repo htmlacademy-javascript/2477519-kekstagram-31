@@ -30,7 +30,7 @@ const EFFECTS_CSS = {
     },
     start: 1,
     step: 0.1,
-    filter: 'grayscale(%val%)' 
+    filter: 'grayscale(%val%)'
   },
   'sepia': {
     range: {
@@ -68,7 +68,7 @@ const EFFECTS_CSS = {
     step: 0.1,
     filter: 'brightness(%val%)'
   }
-}
+};
 
 const applyEffect = (effect) => {
   if (effect === 'none') {
@@ -77,7 +77,7 @@ const applyEffect = (effect) => {
     return;
   }
   effectLevel.classList.remove('hidden');
-  const {filter, ...opt} = EFFECTS_CSS[effect]
+  const {filter, ...opt} = EFFECTS_CSS[effect];
   slider.noUiSlider.updateOptions(opt);
   slider.noUiSlider.on('update', () => {
     effectLevelValue.value = slider.noUiSlider.get();
