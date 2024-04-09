@@ -1,4 +1,5 @@
 import { getCache } from './backend.js';
+import { isEscapeKey } from './util.js';
 
 const STEP_OF_COMMENTS = 5;
 
@@ -32,7 +33,7 @@ const closeBigPictureModule = () => {
 };
 
 function onEscKeyDown(evt) {
-  if (evt.key === 'Escape') {
+  if (isEscapeKey(evt)) {
     closeBigPictureModule();
   }
 }

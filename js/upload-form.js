@@ -1,6 +1,7 @@
 import { onEffectChange } from './picture-effects.js';
 import { sendData } from './backend.js';
 import { showModal } from './modal.js';
+import { isEscapeKey } from './util.js';
 
 const MAX_SIZE = 5;
 const MAX_LENGTH = 140;
@@ -119,7 +120,7 @@ const onImgUploadClose = () => {
 };
 
 function onEscapeKeydown(evt) {
-  if (evt.key === 'Escape') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     onImgUploadClose();
   }
