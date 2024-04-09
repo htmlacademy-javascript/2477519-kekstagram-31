@@ -17,12 +17,7 @@ const getData = () =>
 
 const sendData = (body) =>
   fetch(`${API_URL}/`, { method: 'POST', body })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Не получилось получить данные!');
-      }
-      return response.json();
-    })
+    .then((response) => response.json())
     .catch((error) => {
       throw new Error(error);
     });

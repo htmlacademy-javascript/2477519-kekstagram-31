@@ -1,5 +1,3 @@
-const isEnterKey = (evt) => evt.key === 'Enter';
-
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
 function debounce (callback, timeoutDelay = 500) {
@@ -23,15 +21,4 @@ function shuffle(array) {
   return copy;
 }
 
-function throttle (callback, delayBetweenFrames) {
-  let lastTime = 0;
-  return (...rest) => {
-    const now = new Date();
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-}
-
-export {isEscapeKey, isEnterKey, throttle, debounce, shuffle };
+export {isEscapeKey, debounce, shuffle };
