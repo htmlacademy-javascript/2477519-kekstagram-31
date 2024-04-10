@@ -22,33 +22,7 @@ const commentsLoader = bigPictureModule.querySelector('.comments-loader');
 let commentCount = 0;
 let comments = null;
 
-const closeBigPictureModule = () => {
-  bigPictureModule.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onEscKeyDown);
-
-  commentsLoader.removeEventListener('click', onLoadNewComment);
-
-  commentCount = 0;
-};
-
-function onEscKeyDown(evt) {
-  if (isEscapeKey(evt)) {
-    closeBigPictureModule();
-  }
-}
-
-function onLoadNewComment() {
-  const newComments = comments.slice(commentCount, commentCount + STEP_OF_COMMENTS);
-
-  createComments(newComments);
-
-  if (Number(commentShownCount.textContent) === comments.length) {
-    commentsLoader.classList.add('hidden');
-  }
-}
-
-function createComments(note) {
+const createComments = (note) => {
   note.forEach((comment) => {
     const commentItem = document.createElement('li');
     commentItem.classList.add('social__comment');
@@ -71,6 +45,32 @@ function createComments(note) {
   });
   commentCount += note.length;
   commentShownCount.textContent = commentCount;
+};
+
+const onLoadNewComment = () => {
+  const newComments = comments.slice(commentCount, commentCount + STEP_OF_COMMENTS);
+
+  createComments(newComments);
+
+  if (Number(commentShownCount.textContent) === comments.length) {
+    commentsLoader.classList.add('hidden');
+  }
+};
+
+const closeBigPictureModule = () => {
+  bigPictureModule.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onEscKeyDown);
+
+  commentsLoader.removeEventListener('click', onLoadNewComment);
+
+  commentCount = 0;
+};
+
+function onEscKeyDown(evt) {
+  if (isEscapeKey(evt)) {
+    closeBigPictureModule();
+  }
 }
 
 const openBigPictureModule = (evt) => {
@@ -96,12 +96,11 @@ const openBigPictureModule = (evt) => {
     } else {
       commentsLoader.classList.remove('hidden');
     }
-
-    commentsLoader.addEventListener('click', onLoadNewComment);
-
     document.addEventListener('keydown', onEscKeyDown);
   }
 };
+
+commentsLoader.addEventListener('click', onLoadNewComment);
 
 const pictureCancel = document.getElementById('picture-cancel');
 pictureCancel.addEventListener('click', closeBigPictureModule);

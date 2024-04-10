@@ -1,9 +1,9 @@
+const IMAGE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
+
 const preview = document.querySelector('.img-upload__preview img');
 const uploadFile = document.querySelector('#upload-file');
 const effectList = document.querySelector('.effects__list');
 const smallImages = effectList.querySelectorAll('.effects__preview');
-
-const IMAGE_TYPES = ['.gif', '.jpg', '.jpeg', '.png'];
 
 const onUploadImageChange = () => {
   const file = uploadFile.files[0];

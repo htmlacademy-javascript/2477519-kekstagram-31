@@ -3,8 +3,10 @@ import { sendData } from './backend.js';
 import { showModal } from './modal.js';
 import { isEscapeKey } from './util.js';
 
+const SCALE_STEP = 0.25;
 const MAX_SIZE = 5;
 const MAX_LENGTH = 140;
+const SIZE_IN_PERCENTAGE = 100;
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUpload = document.querySelector('.img-upload');
@@ -39,10 +41,7 @@ const setupValidators = () => {
     if (!hashTags.trim()) {
       return true;
     }
-    if (!hashTags.match(/^(#[а-я\w\d]{1,19}\s*){0,5}$/i)) {
-      return false;
-    }
-    return true;
+    return hashTags.match(/^(#[a-zа-яё0-9]{1,19}\s*){0,5}$/i);
   };
 
   const isHashtagsUnique = (hashTags) => {
@@ -76,19 +75,17 @@ const setupValidators = () => {
 };
 
 const setupScale = () => {
-  const SCALE_STEP = 0.25;
-
   const onSmallerClick = () => {
     if (scale > SCALE_STEP) {
       img.style.transform = `scale(${scale -= SCALE_STEP})`;
-      scaleControl.value = `${scale * 100}%`;
+      scaleControl.value = `${scale * SIZE_IN_PERCENTAGE}%`;
     }
   };
 
   const onBiggerClick = () => {
     if (scale < 1) {
       img.style.transform = `scale(${scale += SCALE_STEP})`;
-      scaleControl.value = `${scale * 100}%`;
+      scaleControl.value = `${scale * SIZE_IN_PERCENTAGE}%`;
     }
   };
 
