@@ -139,6 +139,7 @@ const onSubmitForm = (evt) => {
     const formData = new FormData(evt.target);
     sendData(formData)
       .then(() => {
+        onImgUploadClose();
         showModal(successPopup, 'success');
       })
       .catch(() => showModal(errorPopup, 'error'))
@@ -148,9 +149,9 @@ const onSubmitForm = (evt) => {
   }
 };
 
-imgUploadForm.addEventListener('submit', onSubmitForm);
-
 setupScale();
+
+imgUploadForm.addEventListener('submit', onSubmitForm);
 
 imgUploadCancel.addEventListener('click', onImgUploadClose);
 
