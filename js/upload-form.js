@@ -9,13 +9,11 @@ const MAX_LENGTH = 140;
 const SIZE_IN_PERCENTAGE = 100;
 
 const imgUploadForm = document.querySelector('.img-upload__form');
-const imgUpload = document.querySelector('.img-upload');
-const inputHashtag = imgUpload.querySelector('.text__hashtags');
-const imgDescription = imgUpload.querySelector('.text__description');
-const uploadFile = imgUpload.querySelector('#upload-file');
-const uploadOverlay = imgUpload.querySelector('.img-upload__overlay');
-const imgUploadCancel = imgUpload.querySelector('.img-upload__cancel');
-
+const inputHashtag = imgUploadForm.querySelector('.text__hashtags');
+const imgDescription = imgUploadForm.querySelector('.text__description');
+const uploadFile = imgUploadForm.querySelector('#upload-file');
+const uploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
+const imgUploadCancel = imgUploadForm.querySelector('.img-upload__cancel');
 const smaller = imgUploadForm.querySelector('.scale__control--smaller');
 const bigger = imgUploadForm.querySelector('.scale__control--bigger');
 const img = imgUploadForm.querySelector('.img-upload__preview img');
@@ -27,7 +25,6 @@ const errorPopup = document.querySelector('#error').content.querySelector('.erro
 const successPopup = document.querySelector('#success').content.querySelector('.success');
 
 let scale = 1;
-
 let pristine = null;
 
 const setupValidators = () => {
@@ -135,24 +132,23 @@ inputHashtag.addEventListener('keydown', (evt) => evt.stopPropagation());
 
 imgDescription.addEventListener('keydown', (evt) => evt.stopPropagation());
 
-const onSubmitForm = (onSuccess) => {
-  imgUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if (pristine.validate()) {
-      blockSubmitButton();
-      const formData = new FormData(evt.target);
-      sendData(formData)
-        .then(onSuccess)
-        .then(() => {
-          showModal(successPopup, 'success');
-        })
-        .catch(() => showModal(errorPopup, 'error'))
-        .finally(() => {
-          unblockSubmitButton();
-        });
-    }
-  });
+const onSubmitForm = (evt) => {
+  evt.preventDefault();
+  if (pristine.validate()) {
+    blockSubmitButton();
+    const formData = new FormData(evt.target);
+    sendData(formData)
+      .then(() => {
+        showModal(successPopup, 'success');
+      })
+      .catch(() => showModal(errorPopup, 'error'))
+      .finally(() => {
+        unblockSubmitButton();
+      });
+  }
 };
+
+imgUploadForm.addEventListener('submit', onSubmitForm);
 
 setupScale();
 
@@ -161,5 +157,3 @@ imgUploadCancel.addEventListener('click', onImgUploadClose);
 effectsList.addEventListener('change', onEffectChange);
 
 uploadFile.addEventListener('change', onSelectPhoto);
-
-export { onSubmitForm, onImgUploadClose };

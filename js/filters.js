@@ -16,7 +16,7 @@ const applyFilter = (data) => {
   const filters = {
     'filter-default': data,
     'filter-random': shuffle(data).slice(0, RANDOM_PHOTOS_COUNT),
-    'filter-discussed': data.toSorted((a, b) => b.comments.length - a.comments.length),
+    'filter-discussed': data.toSorted((firstElement, secondElement) => secondElement.comments.length - firstElement.comments.length),
   };
   clearPictures();
   filteredData = filters[currentFilter];
