@@ -13,7 +13,7 @@ noUiSlider.create(slider, {
   },
   format: {
     to: (value) => Number.isInteger(value)
-      ? value.toFixed(0)
+      ? value
       : value.toFixed(1),
     from: (value) => parseFloat(value),
   },

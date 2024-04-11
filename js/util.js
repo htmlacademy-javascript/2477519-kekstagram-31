@@ -1,14 +1,16 @@
+const TIME_OUT_DELAY = 500;
+
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay = TIME_OUT_DELAY) => {
   let timeoutId;
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
-function shuffle(array) {
+const shuffle = (array) => {
   const copy = array.slice();
   let currentIndex = copy.length;
 
@@ -19,6 +21,6 @@ function shuffle(array) {
     [copy[currentIndex], copy[randomIndex]] = [copy[randomIndex], copy[currentIndex]];
   }
   return copy;
-}
+};
 
 export {isEscapeKey, debounce, shuffle };
